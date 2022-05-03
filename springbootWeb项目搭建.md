@@ -162,6 +162,7 @@ public void addViewControllers(ViewControllerRegistry registry) {
 - afterCompletion ：在DispatcherServlet完全处理完请求后被调用，可用于清理资源等。
 
 ``` java
+
 @Component
 public class MyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
@@ -184,6 +185,19 @@ public class MyInterceptor implements HandlerInterceptor {
     }
 }
 ```
+
+### 2).  在拦截器中集成redis
+
+拦截器在SpringContext初始化之前就执行了，Bean初始化之前它就执行了，所以它肯定是无法获取SpringIOC容器中的内容的。那么我们就让拦截器执行的时候实例化拦截器Bean，在拦截器配置类里面先实例化拦截器，然后再获取
+
+````java
+@Bean
+public MyInterceptor getmyInterceptor(){
+    return new MyInterceptor();
+}
+````
+
+在拦截器实例化之前吧拦截器添加到Bean容器中，然后再把拦截器添加到webconfig中
 
 ## 4.MyBatis 的使用
 
